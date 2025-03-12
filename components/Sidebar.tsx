@@ -2,10 +2,18 @@
 import { useState } from "react";
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton } from "@mui/material";
 import { Home, Settings, People, Menu } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
+  const router = useRouter()
+  const sidebarList = [
+    { text: "Dashboard", icon: <Home />, link: '/' },
+    { text: "Table", icon: <Home />, link: '/table' },
+    { text: "Food Menu", icon: <People />, link: '/menu' },
+    { text: "Setting", icon: <Settings />, link: '/setting' },
 
+  ]
   return (
     <div style={{ display: "flex" }}>
       {/* Sidebar */}
@@ -25,12 +33,8 @@ const Sidebar = () => {
           </IconButton>
         </div>
         <List>
-          {[
-            { text: "Dashboard", icon: <Home /> },
-            { text: "Users", icon: <People /> },
-            { text: "Settings", icon: <Settings /> },
-          ].map((item, index) => (
-            <ListItem component="li"  key={index} style={{minHeight:'48px'}}>
+          {sidebarList.map((item, index) => (
+            <ListItem component="li"  key={index} style={{minHeight:'48px', cursor:'pointer'}} onClick={()=> router.push(item.link)}>
               <ListItemIcon style={{minWidth: open ? '56px':'auto'}}>{item.icon}</ListItemIcon>
               {open && <ListItemText primary={item.text} />}
             </ListItem>

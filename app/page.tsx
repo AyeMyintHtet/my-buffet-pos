@@ -1,18 +1,13 @@
 import React from 'react'
-import { getUser } from '@/utils/getUser'
-import BasicTable from '@/components/Table'
-import buffetTableAction from '@/actions/tableAction';
-
 
 
 export default async function Dashboard(){
-  const { user, error } = await getUser()
-  const { getTable } = buffetTableAction; 
+ 
+
   return (
     <div>Dashboard
       <br />
-      {user.user?.email}
-      {/* <BasicTable/> */}
+
     </div>
   )
 }
