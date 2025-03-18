@@ -1,8 +1,5 @@
-"use server";
-
 import { loginSchema } from "@/schema/loginSchema";
-import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+import { createClient } from "@/utils/supabase/client";
 import { redirect } from "next/navigation";
 import {z} from 'zod'
 

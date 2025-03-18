@@ -3,25 +3,25 @@ import React from "react";
 import { Delete, Edit } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import { buffetTable } from "@/types/supabase_db.types"; // Adjust the import path
-
+import buffetTableAction from "@/actions/tableAction"; 
+import { useRouter } from "next/navigation";
 interface TableFuncProps {
   id: number;
   item: buffetTable;
-  onDelete: (id: number) => Promise<void>;
-  onEdit: (id: number, item: Partial<buffetTable>) => Promise<void>;
 }
 
-const TableFunc = ({ id, item, onDelete, onEdit }: TableFuncProps) => {
-  // Handle delete button click
+const TableFunc = ({id, item}: TableFuncProps) => {
+  const router = useRouter()
+  // const {deleteBuffetTable,updateBuffetTable } = buffetTableAction
   const handleDelete = async () => {
-    await onDelete(id);
+    // const res = await deleteBuffetTable(item.id)
+    // console.log("Deleted row with id:", id, "and data:", res);
   };
 
-  // Handle edit button click
   const handleEdit = async () => {
-    await onEdit(id, item);
+    // const res = await updateBuffetTable(item.id,{is_used: false })
+    // console.log("Editing row with id:", id, "and data:", res);
   };
-
   return (
     <div className="flex items-center justify-center gap-2">
       <IconButton color="error" onClick={handleDelete}>
