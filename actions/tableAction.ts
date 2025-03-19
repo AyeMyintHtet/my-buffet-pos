@@ -1,56 +1,67 @@
-"use server"
-import { fetchApi } from "@/lib/api";
-// import apiMiddleware from "@/app/api/middleware";
-import { buffetTable } from "@/types/supabase_db.types";
-// import { createClient } from "@/utils/supabase/server";
+import { fetchApi } from "@/lib/api"; // Adjust import path if necessary
+import { buffetTable } from "@/types/supabase_db.types"; // Adjust import path if necessary
 
-
-async function fetchBuffetTable() {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
-
-  const getBuffetTableInfo = async (): Promise<any> => {
+const buffetTableAction = {
+  async getBuffetTableInfo(): Promise<any> {
     try {
-      const response = await fetchApi(`/api/table`, {
-        method: "GET",
-        cache: "no-store",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetchApi(`/api/table`, { method: "GET" });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      
-      const data = response.json();
-      return data;
+      return await response.json();
     } catch (error) {
       console.error("Error fetching buffet tables:", error);
       return [];
     }
-  };
+  },
+  async deleteBuffetTable(id: number) {
+    try {
+      const response = await fetchApi(`/api/table?id=${id}`, { method: "DELETE" });
+      console.log('sadfasdf',response)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting buffet table:", error);
+      return null;
+    }
+  },
 
-  const deleteBuffetTable = async (id:number) =>{
-    // console.log('id:' + id);
-    // const { data, error } = await supabase.from('buffet_table').delete().eq('id',id );
-    // if (error) throw new Error(error.message);
-    // return data;
-  }
-  const updateBuffetTable = async (id:number,data: Partial<buffetTable>) =>{
-    // console.log('id:' + id +'data:' + JSON.stringify(data));
-    // const { data: updatedData, error } = await supabase.from('buffet_table').update(data).eq('id', id);
-    // if (error) throw new Error(error.message);
-    // return updatedData;
-  }
-  return { 
-    
-    getTable: await getBuffetTableInfo (),
-    deleteBuffetTable,
-    updateBuffetTable,
-  
-  };
-}
+  async updateBuffetTable(id: number, update: Partial<buffetTable>) {
+    try {
+      const response = await fetchApi(`/api/table`, {
+        method: "PATCH",
+        body: JSON.stringify({ id, update }),
+      });
 
-const buffetTableAction = fetchBuffetTable;
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating buffet table:", error);
+      return null;
+    }
+  },
+  async addBuffetTable(prevState: any, formData: FormData) {
+    try {
+      const data = Object.fromEntries(formData.entries());
+      console.log(data);
+      const response = await fetchApi(`/api/table`, {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error adding buffet table:", error);
+      return null;
+    }
+  }
+};
+
 export default buffetTableAction;
-

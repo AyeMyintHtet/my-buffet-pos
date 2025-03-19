@@ -42,7 +42,7 @@ export default function BasicTable({data, header}:{data: any, header: string[]})
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.map((row:any,id:number) => (
+          {data?.length > 0 ? data?.map((row:any,id:number) => (
             <TableRow
               key={id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -60,7 +60,16 @@ export default function BasicTable({data, header}:{data: any, header: string[]})
               <TableCell align="center">{Boolean(row.is_used) ?'Available':'Used'}</TableCell>
               <TableCell align="center"><Delete/><Edit/></TableCell> */}
             </TableRow>
-          ))}
+          ))
+        :   
+        (
+          <TableRow>
+        <TableCell colSpan={header.length} align="center">
+        No Data
+      </TableCell>
+      </TableRow>
+        )
+        }
         </TableBody>
       </Table>
     </TableContainer>

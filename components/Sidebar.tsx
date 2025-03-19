@@ -1,18 +1,18 @@
 'use client'
 import { useState } from "react";
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton } from "@mui/material";
-import { Home, Settings, People, Menu } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
+import { Home, Settings, People, Menu,TableBar } from "@mui/icons-material";
+import { usePathname, useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const router = useRouter()
+  const pathname = usePathname()
   const sidebarList = [
     { text: "Dashboard", icon: <Home />, link: '/' },
-    { text: "Table", icon: <Home />, link: '/table' },
+    { text: "Table", icon: <TableBar />, link: '/table' },
     { text: "Food Menu", icon: <People />, link: '/menu' },
     { text: "Setting", icon: <Settings />, link: '/setting' },
-
   ]
   return (
     <div style={{ display: "flex" }}>
@@ -34,7 +34,7 @@ const Sidebar = () => {
         </div>
         <List>
           {sidebarList.map((item, index) => (
-            <ListItem component="li"  key={index} style={{minHeight:'48px', cursor:'pointer'}} onClick={()=> router.push(item.link)}>
+            <ListItem component="li"  key={index} style={{minHeight:'48px', cursor:'pointer',background: pathname === item.link ?'#c6d3ff' : ''}} onClick={()=> router.push(item.link)}>
               <ListItemIcon style={{minWidth: open ? '56px':'auto'}}>{item.icon}</ListItemIcon>
               {open && <ListItemText primary={item.text} />}
             </ListItem>

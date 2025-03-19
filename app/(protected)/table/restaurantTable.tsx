@@ -11,23 +11,25 @@ interface TableFuncProps {
 }
 
 const TableFunc = ({id, item}: TableFuncProps) => {
-  const router = useRouter()
-  // const {deleteBuffetTable,updateBuffetTable } = buffetTableAction
+  const router =  useRouter()
   const handleDelete = async () => {
-    // const res = await deleteBuffetTable(item.id)
+    const res = await buffetTableAction.deleteBuffetTable(item.id)
+    router.refresh()
+
     // console.log("Deleted row with id:", id, "and data:", res);
   };
 
   const handleEdit = async () => {
-    // const res = await updateBuffetTable(item.id,{is_used: false })
+    const res = await buffetTableAction.updateBuffetTable(item.id,{is_used: true })
+    router.refresh()
     // console.log("Editing row with id:", id, "and data:", res);
   };
   return (
     <div className="flex items-center justify-center gap-2">
-      <IconButton color="error" onClick={handleDelete}>
+      <IconButton color="error" onClick={()=>handleDelete()}>
         <Delete />
       </IconButton>
-      <IconButton color="primary" onClick={handleEdit}>
+      <IconButton color="primary" onClick={()=>handleEdit()}>
         <Edit />
       </IconButton>
     </div>

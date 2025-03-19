@@ -1,11 +1,13 @@
-import React from "react";
+'use client'
+import React, { useEffect, useState } from "react";
 import BasicTable from "@/components/Table";
 import buffetTableAction from "@/actions/tableAction";
 import { buffetTable } from "@/types/supabase_db.types";
-import { Delete, Edit } from "@mui/icons-material";
-import IconButton from "@mui/material/IconButton";
-import TableFunc from "./resturantTable";
+import { Add } from "@mui/icons-material";
+import TableFunc from "./restaurantTable";
 import { getUser } from "@/utils/getUser";
+import ButtonCom from "@/components/Button";
+import AddRestaurantTableModal from "./addRestaurantTableModal";
 
 const buffetTableHeader = [
   "ID",
@@ -14,10 +16,20 @@ const buffetTableHeader = [
   "Availability",
   "Action",
 ];
-export default async function Dashboard() {
-  const { getTable } = await buffetTableAction();
- const data = await getUser()
-  const res = getTable.map((item: buffetTable, id: number) => {
+
+
+export default function Dashboard() {
+  const [buffetTable,setBuffetTable] = useState([])
+  const [isShowModal, setIsShowModal] = useState(false)
+  useEffect(()=>{
+    const callApi = async () => {
+      const res = await buffetTableAction.getBuffetTableInfo();
+      setBuffetTable(res)
+    }
+    callApi()
+  },[])
+  
+  const res = buffetTable.map((item: buffetTable, id: number) => {
     return [
       id + 1,
       item.table_no,
@@ -29,16 +41,19 @@ export default async function Dashboard() {
       ),
       <TableFunc key={id} id={id} item={item} />,
     ];
-  });
+  })
 
   return (
     <div>
       Dashboard
-      {data.user?.user?.email}
       <br />
-      <div className="flex w-full">
+      <div className="flex w-full flex-col">
+        <div className="text-right mb-4">
+          <ButtonCom text="Add Table" variant="contained" icon={<Add/>} onClick={()=>setIsShowModal(true)}/>
+        </div>
         <BasicTable data={res} header={buffetTableHeader} />
       </div>
+      <AddRestaurantTableModal open={isShowModal} setOpen={setIsShowModal}/>
     </div>
   );
 }
