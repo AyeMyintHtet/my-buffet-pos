@@ -6,7 +6,7 @@ import Modal from "@mui/material/Modal";
 
 interface IModalCom {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   body: React.ReactElement
   title?: string;
   
@@ -29,7 +29,7 @@ export default function ModalCom({ open,setOpen, title, body }: IModalCom) {
     <div>
       <Modal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() =>setOpen&& setOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

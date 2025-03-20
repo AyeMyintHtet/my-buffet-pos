@@ -78,17 +78,18 @@ export async function DELETE(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("buffet_table")
-      .insert(req.body);
+      .insert([body]);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json(
-      { message: "Insert successful", data },
+      { message: "success", data },
       { status: 200 }
     );
   } catch (err) {

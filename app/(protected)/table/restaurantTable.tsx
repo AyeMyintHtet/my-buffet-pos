@@ -3,33 +3,31 @@ import React from "react";
 import { Delete, Edit } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import { buffetTable } from "@/types/supabase_db.types"; // Adjust the import path
-import buffetTableAction from "@/actions/tableAction"; 
+import buffetTableAction from "@/actions/tableAction";
 import { useRouter } from "next/navigation";
 interface TableFuncProps {
   id: number;
   item: buffetTable;
+  callApi: React.Dispatch<React.SetStateAction<boolean>>;
+  showEditModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
+const handleDelete = async (id:number, callApi:React.Dispatch<React.SetStateAction<boolean>>) => {
+  await buffetTableAction.deleteBuffetTable(id);
+  callApi((prev) => !prev);
+};
 
-const TableFunc = ({id, item}: TableFuncProps) => {
-  const router =  useRouter()
-  const handleDelete = async () => {
-    const res = await buffetTableAction.deleteBuffetTable(item.id)
-    router.refresh()
+const handleEdit = async () => {
+  // await buffetTableAction.updateBuffetTable(id, { is_used: true });
+};
 
-    // console.log("Deleted row with id:", id, "and data:", res);
-  };
+const TableFunc = ({ id, item, callApi,showEditModal }: TableFuncProps) => {
 
-  const handleEdit = async () => {
-    const res = await buffetTableAction.updateBuffetTable(item.id,{is_used: true })
-    router.refresh()
-    // console.log("Editing row with id:", id, "and data:", res);
-  };
   return (
     <div className="flex items-center justify-center gap-2">
-      <IconButton color="error" onClick={()=>handleDelete()}>
+      <IconButton color="error" onClick={() => handleDelete(item.id,callApi)}>
         <Delete />
       </IconButton>
-      <IconButton color="primary" onClick={()=>handleEdit()}>
+      <IconButton color="primary" onClick={() => handleEdit()}>
         <Edit />
       </IconButton>
     </div>
