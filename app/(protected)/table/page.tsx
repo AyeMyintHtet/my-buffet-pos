@@ -6,7 +6,7 @@ import { buffetTable } from "@/types/supabase_db.types";
 import { Add } from "@mui/icons-material";
 import TableFunc from "./restaurantTable";
 import ButtonCom from "@/components/Button";
-import AddRestaurantTableModal from "./addRestaurantTableModal";
+import RestaurantTableModal from "./restaurantTableModal";
 
 const buffetTableHeader = [
   "ID",
@@ -20,7 +20,6 @@ const buffetTableHeader = [
 export default function Dashboard() {
   const [buffetTable,setBuffetTable] = useState<buffetTable[]| null>(null)
   const [isShowModal, setIsShowModal] = useState(false)
-  const [isShowEditModal, setIsShowEditModal] = useState(false)
   const [isCallApi, setIsCallApi] = useState(false)
 
   const callApi = async () => {
@@ -31,7 +30,10 @@ export default function Dashboard() {
   useEffect(()=>{
     callApi()
   },[isCallApi])
-  
+
+  const showEditModal = (item:buffetTable)=>{
+    
+  }
   const res = buffetTable !== null && buffetTable.map((item: buffetTable, id: number) => {
     return [
       id + 1,
@@ -42,7 +44,7 @@ export default function Dashboard() {
       ) : (
         <p className="text-green-500">Available</p>
       ),
-      <TableFunc key={id} id={id} item={item} callApi={setIsCallApi} showEditModal={setIsShowEditModal}/>,
+      <TableFunc key={id} id={id} item={item} callApi={setIsCallApi} showEditModal={showEditModal}/>,
     ];
   })
 
@@ -54,7 +56,7 @@ export default function Dashboard() {
         </div>
         <BasicTable data={res} header={buffetTableHeader} />
       </div>
-      <AddRestaurantTableModal open={isShowModal} setOpen={setIsShowModal} callApi={setIsCallApi}/>
+      <RestaurantTableModal open={isShowModal} setOpen={setIsShowModal} callApi={setIsCallApi}/>
     </div>
   );
 }

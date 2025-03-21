@@ -9,15 +9,11 @@ interface TableFuncProps {
   id: number;
   item: buffetTable;
   callApi: React.Dispatch<React.SetStateAction<boolean>>;
-  showEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showEditModal: (item:buffetTable)=>void;
 }
 const handleDelete = async (id:number, callApi:React.Dispatch<React.SetStateAction<boolean>>) => {
   await buffetTableAction.deleteBuffetTable(id);
   callApi((prev) => !prev);
-};
-
-const handleEdit = async () => {
-  // await buffetTableAction.updateBuffetTable(id, { is_used: true });
 };
 
 const TableFunc = ({ id, item, callApi,showEditModal }: TableFuncProps) => {
@@ -27,7 +23,7 @@ const TableFunc = ({ id, item, callApi,showEditModal }: TableFuncProps) => {
       <IconButton color="error" onClick={() => handleDelete(item.id,callApi)}>
         <Delete />
       </IconButton>
-      <IconButton color="primary" onClick={() => handleEdit()}>
+      <IconButton color="primary" onClick={() => showEditModal(item)}>
         <Edit />
       </IconButton>
     </div>

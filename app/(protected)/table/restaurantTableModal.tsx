@@ -6,13 +6,13 @@ import { useRouter } from 'next/navigation';
 import React, { useActionState, useEffect } from 'react'
 import { useFormStatus } from 'react-dom';
 
-interface IAddRestaurantTableModal{
+interface IRestaurantTableModal{
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   callApi : React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const AddRestaurantTableModal = ({open,setOpen,callApi}:IAddRestaurantTableModal) => {
+const RestaurantTableModal = ({open,setOpen,callApi}:IRestaurantTableModal) => {
   const Form = () => {
     const { pending } = useFormStatus();
     return (
@@ -80,4 +80,4 @@ const AddRestaurantTableModal = ({open,setOpen,callApi}:IAddRestaurantTableModal
   )
 }
 
-export default AddRestaurantTableModal
+export default RestaurantTableModal

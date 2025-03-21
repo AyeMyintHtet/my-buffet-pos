@@ -41,9 +41,9 @@ export default function NotFound() {
     },
     keyframes: `
       @keyframes glitch {
-        0% { text-shadow: 4px 4px 0px #ff00ff, -4px -4px 0px #00ffff; }
-        50% { text-shadow: -4px -4px 0px #ff00ff, 4px 4px 0px #00ffff; }
-        100% { text-shadow: 4px 4px 0px #ff00ff, -4px -4px 0px #00ffff; }
+        0% { text-shadow: 4px 4px 0px #ff0000, -4px -4px 0px #ffbf29; }
+        50% { text-shadow: -4px -4px 0px #ff0000, 4px 4px 0px #ffbf29; }
+        100% { text-shadow: 4px 4px 0px #ff0000, -4px -4px 0px #ffbf29; }
       }
     `,
   };
