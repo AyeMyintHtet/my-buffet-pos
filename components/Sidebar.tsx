@@ -11,7 +11,7 @@ const Sidebar = () => {
   const sidebarList = [
     { text: "Dashboard", icon: <Home />, link: '/' },
     { text: "Table", icon: <TableBar />, link: '/table' },
-    { text: "Food Menu", icon: <People />, link: '/menu' },
+    { text: "Food Menu", icon: <People />, link: '/food-menu' },
     { text: "Setting", icon: <Settings />, link: '/setting' },
   ]
   return (
