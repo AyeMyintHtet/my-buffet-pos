@@ -40,11 +40,20 @@ export async function PATCH(req: NextRequest) {
       .match({ id });
 
     if (error) {
+      if (error.code === '23505') {
+        return NextResponse.json(
+          {
+            error: "A table with this number already exists.",
+            hint: "Try using a unique table number.",
+          },
+          { status: 400 }
+        );
+      }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json(
-      { message: "Update successful", data },
+      { message: "success", data },
       { status: 200 }
     );
   } catch (err) {
@@ -68,7 +77,7 @@ export async function DELETE(req: NextRequest) {
     }
     console.log('success',data)
     return NextResponse.json(
-      { message: "Update successful", data },
+      { message: "success", data },
       { status: 200 }
     );
   } catch (err) {
@@ -85,6 +94,15 @@ export async function POST(req: NextRequest) {
       .insert([body]);
 
     if (error) {
+      if (error.code === '23505') {
+        return NextResponse.json(
+          {
+            error: "A table with this number already exists.",
+            hint: "Try using a unique table number.",
+          },
+          { status: 400 }
+        );
+      }
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 

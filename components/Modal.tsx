@@ -7,9 +7,8 @@ import Modal from "@mui/material/Modal";
 interface IModalCom {
   open: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  body: React.ReactElement
+  body: React.ReactElement;
   title?: string;
-  
 }
 
 const style = {
@@ -24,12 +23,12 @@ const style = {
   p: 4,
 };
 
-export default function ModalCom({ open,setOpen, title, body }: IModalCom) {
+export default function ModalCom({ open, setOpen, title, body }: IModalCom) {
   return (
     <div>
       <Modal
         open={open}
-        onClose={() =>setOpen&& setOpen(false)}
+        onClose={() => setOpen && setOpen(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

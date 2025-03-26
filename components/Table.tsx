@@ -31,12 +31,14 @@ const rows = [
 export default function BasicTable({
   data,
   header,
+  className,
 }: {
   data: any;
   header: string[];
+  className?: string;
 }) {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className={className}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -58,6 +60,7 @@ export default function BasicTable({
             data?.map((row: any, id: number) => (
               <TableRow
                 key={id}
+                {...{ 'data-id': row.id }}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 {row.map((item: any, idx: number) => (

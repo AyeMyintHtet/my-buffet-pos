@@ -27,12 +27,15 @@ const buffetTableAction = {
       return null;
     }
   },
-
-  async updateBuffetTable(id: number, update: Partial<buffetTable>) {
+  // id: number, update: Partial<buffetTable>
+  async updateBuffetTable(prevState: any, formData: FormData) {
     try {
+      const {id, ...updates} = Object.fromEntries(formData.entries());
+      console.log('id',id)
+      console.log('props',updates)
       const response = await fetchApi(`/api/table`, {
         method: "PATCH",
-        body: JSON.stringify({ id, update }),
+        body: JSON.stringify({ id, updates }),
       });
 
       if (!response.ok) {
@@ -53,9 +56,6 @@ const buffetTableAction = {
         body: JSON.stringify(data),
       });
       console.log(response);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
       return await response.json();
     } catch (error) {
       console.error("Error adding buffet table:", error);
