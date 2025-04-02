@@ -29,6 +29,25 @@ export async function GET(req: NextRequest) {
   }
 }
 
+export async function POST(req:NextRequest){
+  try {
+    const supabase = await createClient();
+    const table_name = req.nextUrl.searchParams.get("table_name");
+    const body = await req.json();
+    if (!table_name) {
+      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    }
+    const { data, error } = await supabase.from(table_name).insert([body]);
+    console.log('error', error)
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ message: "success", data }, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+}
+
 export async function DELETE(req: NextRequest) {
   try {
     const supabase = await createClient();

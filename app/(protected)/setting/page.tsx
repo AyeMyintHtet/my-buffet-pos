@@ -17,7 +17,7 @@ import useTableEventDelegation from "@/hooks/useTableEventDelegation";
 import SettingTableModel, { ModalFormData } from "./settingTableModel";
 
 const tierListHeader = ["ID", "Name", "Amount", ""];
-const menuCategoryHeader = ["ID", "Name", ""];
+const menuCategoryHeader = ["ID", "  Name   ", ""];
 const timeLimitHeader = ["ID", "Time Limit", ""];
 
 const Setting = () => {
@@ -61,7 +61,9 @@ const Setting = () => {
       if (res?.message === "success")
         setTimeLimitData((prev) => prev?.filter((item) => item.id !== id));
     },
-    onEdit: (data) => {},
+    onEdit: (data) => {
+      editTable('other_info',data)
+    },
   });
 
   const fetchTierList = async () => {
@@ -121,6 +123,7 @@ const Setting = () => {
         name: "Name",
       },
     ];
+    let callApi =fetchMenuCategory
     if (tableName === "tier_list") {
       obj = [
         {
@@ -132,6 +135,7 @@ const Setting = () => {
           name: "Amount",
         },
       ];
+      callApi = fetchTierList
     } else if (tableName === "other_info") {
       obj = [
         {
@@ -139,15 +143,25 @@ const Setting = () => {
           name: "Time Limit",
         },
       ];
+      callApi= fetchTimeLimit
     }
 
     setModalData({
       table: tableName,
       data: obj,
+      callApi:async ()=> [await callApi(), setIsOpen(false)]
     });
     setIsOpen(true);
   };
 
+  function editTable(tableName: IDatabases , data: Array<any>){
+    setModalData({
+      table: tableName,
+      data: data,
+      callApi: async ()=> [await fetchTableData(), setIsOpen(false)]
+    });
+    setIsOpen(true);
+  }
   return (
     <>
       <Box sx={{ flexGrow: 1, marginTop: "10px" }}>
@@ -180,7 +194,6 @@ const Setting = () => {
                 className="add-menu-category"
                 icon={<Add />}
                 onClick={() => addTable("menu_category")}
-
               />
             </div>
 
@@ -201,7 +214,6 @@ const Setting = () => {
                 className="add-time-limit"
                 icon={<Add />}
                 onClick={() => addTable("other_info")}
-
               />
             </div>
             <BasicTable

@@ -30,9 +30,11 @@ type ISettingTableModel = {
 const Form = ({ renderField }: { renderField: ModalFormData }) => {
   const isEdit = !!renderField.EditId;
   const { pending } = useFormStatus();
+  console.log('renderField',renderField)
   return (
     <>
       {isEdit && <input type="hidden" name="id" value={renderField.EditId} />}
+      <input type="hidden"  name="table_name" defaultValue={renderField.table} />
       {renderField.data.map((item, id) => (
         <div className="mb-4" key={id}>
           <label
@@ -44,7 +46,7 @@ const Form = ({ renderField }: { renderField: ModalFormData }) => {
           <input
             type="text"
             id={item.inputid}
-            name="table_no"
+            name={item.name.toLowerCase().split(' ').join('_')}
             defaultValue={item.value}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
@@ -74,6 +76,9 @@ const SettingTableModel = ({
     const action = isEdit ? settingAction.updateTable : settingAction.addTable;
 
     const [state, formAction] = useActionState(action, null);
+    if(state?.message === 'success'){
+      renderField.callApi?.();
+    }
     return (
       <form action={formAction}>
         <Form renderField={renderField} />
