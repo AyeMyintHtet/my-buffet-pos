@@ -1,10 +1,5 @@
 import settingAction from "@/actions/settingAction";
 import ModalCom from "@/components/Modal";
-import {
-  menuCategoryTable,
-  otherInfoTable,
-  tierListTable,
-} from "@/types/supabase_db.types";
 import React, { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 

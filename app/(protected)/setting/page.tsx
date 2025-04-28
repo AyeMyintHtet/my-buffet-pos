@@ -52,7 +52,15 @@ const Setting = () => {
       if (res?.message === "success")
         setMenuCategoryData((prev) => prev?.filter((item) => item.id !== id));
     },
-    onEdit: (data) => {},
+    onEdit: (data) => {
+      const obj = [{
+        inputid: "name",
+        name: "Name",
+        value: data.name,
+      }]
+      console.log('data',data)
+      editTable('menu_category',obj, data.id)
+    },
   });
 
   useTableEventDelegation(".time-limit-list", timeLimitData, {
@@ -62,7 +70,12 @@ const Setting = () => {
         setTimeLimitData((prev) => prev?.filter((item) => item.id !== id));
     },
     onEdit: (data) => {
-      editTable('other_info',data)
+      const obj = [{
+        inputid: data.name,
+        name: "Time Limit",
+        value: data.value,
+      }]
+      // editTable('other_info',obj)
     },
   });
 
@@ -154,8 +167,10 @@ const Setting = () => {
     setIsOpen(true);
   };
 
-  function editTable(tableName: IDatabases , data: Array<any>){
+  function editTable(tableName: IDatabases , data: Array<any>, EditId: number){
+    console.log('data',data)
     setModalData({
+      EditId,
       table: tableName,
       data: data,
       callApi: async ()=> [await fetchTableData(), setIsOpen(false)]
