@@ -13,7 +13,7 @@ const Sidebar = () => {
   const sidebarList = [
     { text: "Dashboard", icon: <Home />, link: '/' },
     { text: "Table", icon: <TableBar />, link: '/table' },
-    { text: "Food Menu", icon: <FastfoodIcon />, link: '/food-menu' },
+    { text: "Food Menu", icon: <FastfoodIcon />, link: '/menu' },
     { text: "Setting", icon: <Settings />, link: '/setting' },
   ]
   const Logout = async () => {

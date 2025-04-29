@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import useTableEventDelegation from "@/hooks/useTableEventDelegation";
 
 const buffetTableHeader = [
-  "ID",
   "Table Number",
   "Max Customer",
   "Availability",
@@ -54,7 +53,7 @@ export default function Dashboard() {
       buffetTable !== null &&
       buffetTable.map((item: buffetTable, id: number) => {
         return [
-          id + 1,
+          
           item.table_no,
           item.max_customer,
           item.is_used ? (

@@ -22,7 +22,7 @@ export interface menuCategoryTable {
 export interface menuItemTable {
     id: number;
     name: string;
-    tier_id: number;
+    tier_list_id: number;
     category_id: number;
     image: string;
     available_amt: number;
@@ -37,6 +37,7 @@ export interface tierListTable{
     id: number;
     name : string;
     amount: number;
+    level:number;
 }
 
 export type IDatabases = 'buffet_table' | 'customer' | 'menu_category' | 'menu_item' | 'other_info' | 'tier_list';

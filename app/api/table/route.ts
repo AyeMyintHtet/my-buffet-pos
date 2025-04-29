@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase.from("buffet_table").select("*");
+    const { data, error } = await supabase.from("buffet_table").select("*").order("table_no", { ascending: true });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

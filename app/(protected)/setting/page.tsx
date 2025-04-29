@@ -16,7 +16,7 @@ import TableFunc from "@/components/TableFunc";
 import useTableEventDelegation from "@/hooks/useTableEventDelegation";
 import SettingTableModel, { ModalFormData } from "./settingTableModel";
 
-const tierListHeader = ["ID", "Name", "Amount", ""];
+const tierListHeader = ["ID", "Name", "Amount", "Level",""];
 const menuCategoryHeader = ["ID", "  Name   ", ""];
 const timeLimitHeader = ["ID", "Time Limit", ""];
 
@@ -53,6 +53,11 @@ const Setting = () => {
         inputid: "amount",
         name: "Amount",
         value: data.amount,
+      },
+      {
+        inputid: "level",
+        name: "Level",
+        value: data.level,
       }
     ]
     editTable("tier_list",obj, data.id,fetchTierList)
@@ -151,6 +156,7 @@ const Setting = () => {
           id + 1,
           item.name,
           item.amount,
+          item.level,
           <TableFunc key={id} item={item} />,
         ];
       })
@@ -190,6 +196,10 @@ const Setting = () => {
         {
           inputid: "amount",
           name: "Amount",
+        },
+        {
+          inputid: "level",
+          name: "Level",
         },
       ];
       callApi = fetchTierList
