@@ -1,10 +1,12 @@
 "use client";
+import React, { useEffect, useMemo, useState } from "react";
+import { Add } from "@mui/icons-material";
 import menuTableAction from "@/actions/menuAction";
 import BasicTable from "@/components/Table";
 import TableFunc from "@/components/TableFunc";
 import { menuItemTable } from "@/types/supabase_db.types";
-import React, { useEffect, useMemo, useState } from "react";
 import MenuTableModel from "./menuTableModel";
+import ButtonCom from "@/components/Button";
 
 const tableHeader = [
   "Name",
@@ -18,14 +20,17 @@ const FoodMenu = () => {
   const [foodMenu, setFoodMenu] = useState<menuItemTable[]>([]);
   const [isShowModal, setIsShowModal] = useState(false);
   const [isCallApi, setIsCallApi] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [editData, setEditData] = useState<Partial<menuItemTable> | null>(null);
   useEffect(() => {
-    fetchFoodMenu();
+    // fetchFoodMenu();
   }, []);
 
   async function fetchFoodMenu() {
+    setIsLoading(true);
     const res = await menuTableAction.getMenuTableInfo();
-    console.log(res);
     setFoodMenu(res);
+    setIsLoading(false);
   }
   const tableBody = useMemo(() => {
     return (
@@ -43,14 +48,24 @@ const FoodMenu = () => {
     );
   }, [foodMenu]);
 
+
   return (
     <div>
+       <div className="text-right mb-4">
+          <ButtonCom
+            text="Add Table"
+            variant="contained"
+            icon={<Add />}
+            onClick={() => [setEditData(null), setIsShowModal(true)]}
+          />
+        </div>
       <BasicTable
         data={tableBody}
         header={tableHeader}
         className="restaurant-table"
+        isLoading={isLoading}
       />
-            <MenuTableModel
+      <MenuTableModel
         open={isShowModal}
         setOpen={setIsShowModal}
         callApi={setIsCallApi}
