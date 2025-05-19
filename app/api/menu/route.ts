@@ -66,7 +66,39 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+export async function UPDATE(req: NextRequest) {
+  try {
+    const supabase = await createClient();
+    const data = await req.json(); // receive the entire payload
+    const { id } = data;
 
+    // Check that an ID is provided
+    if (!id) {
+      return NextResponse.json({ error: "Missing ID" }, { status: 400 });
+    }
+
+    // Remove the ID from the update payload
+    const updateData = { ...data };
+    delete updateData.id;
+
+    // Update only provided fields
+    const { data: updated, error } = await supabase
+      .from("menu_item")
+      .update(updateData)
+      .eq("id", id);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(updated, { status: 200 });
+  } catch (err) {
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
 export async function DELETE(req: NextRequest) {
   try {
     const supabase = await createClient();

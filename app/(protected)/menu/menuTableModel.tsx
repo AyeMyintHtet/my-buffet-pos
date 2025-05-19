@@ -1,7 +1,12 @@
 "use client";
 import buffetTableAction from "@/actions/tableAction";
 import ModalCom from "@/components/Modal";
-import { buffetTable, menuCategoryTable, menuItemTable, tierListTable } from "@/types/supabase_db.types";
+import {
+  buffetTable,
+  menuCategoryTable,
+  menuItemTable,
+  tierListTable,
+} from "@/types/supabase_db.types";
 import React, { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
 import menuTableAction from "@/actions/menuAction";
@@ -11,7 +16,7 @@ interface IRestaurantTableModal {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   callApi: React.Dispatch<React.SetStateAction<boolean>>;
   editData?: Partial<menuItemTable> | null;
-  tierListData : tierListTable[];
+  tierListData: tierListTable[];
   menuCategoryData: menuCategoryTable[];
 }
 // name, image, available_amt,category_id,tier_list_id
@@ -72,6 +77,11 @@ const MenuTableModel = ({
             required
             autoComplete="off"
           />
+          {defaultValues.image && (
+            <div>
+              <img src={defaultValues.image} alt="Preview" />
+            </div>
+          )}
         </div>
 
         <div className="mb-4">
@@ -131,7 +141,7 @@ const MenuTableModel = ({
             <option value="" disabled>
               Select a category
             </option>
-            {menuCategoryData.map((cat:menuCategoryTable) => (
+            {menuCategoryData.map((cat: menuCategoryTable) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
@@ -156,7 +166,7 @@ const MenuTableModel = ({
             <option value="" disabled>
               Select a category
             </option>
-            {tierListData.map((cat:tierListTable) => (
+            {tierListData.map((cat: tierListTable) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
@@ -175,13 +185,16 @@ const MenuTableModel = ({
   };
 
   const ModalBody = () => {
+    console.log("isEdit", isEdit);
     const action = isEdit
-      ? menuTableAction.addMenuTable
+      ? menuTableAction.editMenuTable
       : menuTableAction.addMenuTable;
 
     const [state, formAction] = useActionState(action, null);
     useEffect(() => {
+      console.log("state", state);
       if (state?.message === "success") {
+        console.log("success");
         setOpen(false);
         callApi((prev) => !prev);
       }

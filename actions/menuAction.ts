@@ -26,20 +26,49 @@ const menuTableAction = {
         body: formDataToSend,
       });
       const {publicUrl} = await ImageUpload.json();
-      if(!publicUrl) return {error:'nothing',hint:'nothing'};
+      if(!publicUrl) return {error:'no publicURl',hint:'no publicURl'};
       data.image = publicUrl;
       const response = await fetchApi(`/api/menu`, {
         method: "POST",
         body: JSON.stringify(data),
       });
-      return {message:'nothing'};
+      return {message: 'success'}
     } catch (error) {
       console.error("Error adding buffet table:", error);
-      return {error:'nothing',hint:'nothing'};
+      return {error:'Something went wrong', hint:'Something went wrong'};
+    }
+  },
+  async editMenuTable(prevState: any, formData: FormData) {
+    try {
+      const data:any = Object.fromEntries(formData.entries());
+      console.log(data.image,'data');
+      if(data?.image?.name.length>0){
+        const compressedImg = await handleImageChange(data?.image)
+        const formDataToSend = new FormData()
+        formDataToSend.append('name', `${Date.now()}${compressedImg?.name}`)
+        formDataToSend.append('file', compressedImg as Blob)
+        const ImageUpload = await fetchApi(`/api/image`, {
+          method: "POST",
+          body: formDataToSend,
+        });
+        const {publicUrl} = await ImageUpload.json();
+        if(!publicUrl) return {error:'no publicURl',hint:'no publicURl'};
+        data.image = publicUrl;
+      }
+      const response = await fetchApi(
+        `/api/menu`,
+        {
+          method: "UPDATE",
+          body: JSON.stringify(data),
+        }
+      );
+      return {message: 'success'}
+    } catch (error) {
+      console.error("Error editing buffet table:", error);
+      return {error:`${error}`, hint:'Something went wrong'};
     }
 
   },
-
   async deleteMenuRow(id: number) {
     try {
       const response = await fetchApi(

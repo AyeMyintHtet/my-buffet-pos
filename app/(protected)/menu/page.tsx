@@ -28,10 +28,12 @@ const FoodMenu = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [editData, setEditData] = useState<Partial<menuItemTable> | null>(null);
   useEffect(() => {
-    fetchFoodMenu();
     fetchMenuCategory();
     fetchTierList();
   }, []);
+  useEffect(() => {
+    fetchFoodMenu();
+  }, [isCallApi]);
 
   async function fetchFoodMenu() {
     setIsLoading(true);
@@ -69,11 +71,13 @@ const FoodMenu = () => {
         setFoodMenu((prev) => prev?.filter((item) => item.id !== id));
     },
     onEdit: (data) => {
-      const obj = [{
-        inputid: data.name,
-        name: "Time Limit",
-        value: data.value,
-      }]
+      console.log(data,'dataa');
+      setEditData({
+        ...data,
+        table_no : data.name,
+        max_customer: data.available_amt
+      })
+      setIsShowModal(true)
       // editTable('other_info',obj)
     },
   });
@@ -100,7 +104,7 @@ const FoodMenu = () => {
         callApi={setIsCallApi}
         tierListData={tierListData}
         menuCategoryData={menuCategoryData}
-        // editData={null}
+        editData={editData}
       />
     </div>
   );
