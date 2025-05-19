@@ -54,13 +54,6 @@ export default function BasicTable({
                     {item}
                   </TableCell>
                 ))}
-                {/* <TableCell component="th" scope="row">
-                {row.id}
-              </TableCell>
-              <TableCell align="center">{row.table_no}</TableCell>
-              <TableCell align="center">{row.max_customer}</TableCell>
-              <TableCell align="center">{Boolean(row.is_used) ?'Available':'Used'}</TableCell>
-              <TableCell align="center"><Delete/><Edit/></TableCell> */}
               </TableRow>
             ))
           ) : (

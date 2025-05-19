@@ -9,8 +9,14 @@ export async function submitForm(prevState: any, formData: FormData) {
     const supabase = await createClient()
     const rawFormData = Object.fromEntries(formData.entries());
     const validatedData = loginSchema.parse(rawFormData);
-
-    const {data, error} = await supabase.auth.signInWithPassword(validatedData);
+    // return ;
+    const obj ={
+      email: validatedData.email,
+      password: validatedData.password,
+      options:{}
+    }
+    if(process.env.NODE_ENV === 'production' ) obj.options = { captchaToken:validatedData.captchaToken};
+    const {data, error} = await supabase.auth.signInWithPassword(obj);
     if(data){
       return { status:'success', formData: data };
     }
@@ -21,7 +27,6 @@ export async function submitForm(prevState: any, formData: FormData) {
     if (error instanceof z.ZodError) {
       return { error: error.errors[0].message };
     }
-    console.log(error);
     return { error: "An unexpected error occurred." };
   }
 }

@@ -16,7 +16,7 @@ const settingAction = {
       return [];
     }
   },
-  async deleteTable(table_name: IDatabases, id: number) {
+  async deleteRow(table_name: IDatabases, id: number) {
     try {
       const response = await fetchApi(
         `/api/setting?table_name=${table_name}&id=${id}`,
@@ -36,8 +36,6 @@ const settingAction = {
       const { id, table_name, ...updates } = Object.fromEntries(
         formData.entries()
       );
-      console.log("id", id);
-      console.log("props", updates);
       const response = await fetchApi(`/api/setting?table_name=${table_name}`, {
         method: "PATCH",
         body: JSON.stringify({ id, updates }),
@@ -59,7 +57,6 @@ const settingAction = {
         method: "POST",
         body: JSON.stringify(data),
       });
-      console.log(response);
       return await response.json();
     } catch (error) {
       console.error("Error adding buffet table:", error);

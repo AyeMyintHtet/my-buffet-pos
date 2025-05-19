@@ -17,7 +17,6 @@ const buffetTableAction = {
   async deleteBuffetTable(id: number) {
     try {
       const response = await fetchApi(`/api/table?id=${id}`, { method: "DELETE" });
-      console.log('sadfasdf',response)
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -31,8 +30,6 @@ const buffetTableAction = {
   async updateBuffetTable(prevState: any, formData: FormData) {
     try {
       const {id, ...updates} = Object.fromEntries(formData.entries());
-      console.log('id',id)
-      console.log('props',updates)
       const response = await fetchApi(`/api/table`, {
         method: "PATCH",
         body: JSON.stringify({ id, updates }),
@@ -50,12 +47,10 @@ const buffetTableAction = {
   async addBuffetTable(prevState: any, formData: FormData) {
     try {
       const data = Object.fromEntries(formData.entries());
-      console.log(data);
       const response = await fetchApi(`/api/table`, {
         method: "POST",
         body: JSON.stringify(data),
       });
-      console.log(response);
       return await response.json();
     } catch (error) {
       console.error("Error adding buffet table:", error);

@@ -33,7 +33,6 @@ export async function PATCH(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.log('body', updates);
     const { data, error } = await supabase
       .from("buffet_table")
       .update(updates)
@@ -72,10 +71,8 @@ export async function DELETE(req: NextRequest) {
       .match({ id });
 
     if (error) {
-      console.log('errorrrr',error)
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    console.log('success',data)
     return NextResponse.json(
       { message: "success", data },
       { status: 200 }

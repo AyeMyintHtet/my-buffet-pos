@@ -38,7 +38,6 @@ export async function POST(req:NextRequest){
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
     const { data, error } = await supabase.from(table_name).insert([body]);
-    console.log('error', error)
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
@@ -56,9 +55,7 @@ export async function PATCH(req:NextRequest){
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
     const updates = props.updates;
-    console.log('body', updates);
     const { data, error } = await supabase.from(table_name).update(updates).match({id});
-    console.log('error', error)
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

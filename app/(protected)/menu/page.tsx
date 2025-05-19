@@ -4,9 +4,12 @@ import { Add } from "@mui/icons-material";
 import menuTableAction from "@/actions/menuAction";
 import BasicTable from "@/components/Table";
 import TableFunc from "@/components/TableFunc";
-import { menuItemTable } from "@/types/supabase_db.types";
+import { menuCategoryTable, menuItemTable, tierListTable } from "@/types/supabase_db.types";
 import MenuTableModel from "./menuTableModel";
 import ButtonCom from "@/components/Button";
+import settingAction from "@/actions/settingAction";
+import Image from "next/image";
+import useTableEventDelegation from "@/hooks/useTableEventDelegation";
 
 const tableHeader = [
   "Name",
@@ -18,12 +21,16 @@ const tableHeader = [
 ];
 const FoodMenu = () => {
   const [foodMenu, setFoodMenu] = useState<menuItemTable[]>([]);
+  const [tierListData, setTierListData] = useState<tierListTable[]>([]);
+  const [menuCategoryData, setMenuCategoryData] = useState<menuCategoryTable[]>([]);
   const [isShowModal, setIsShowModal] = useState(false);
   const [isCallApi, setIsCallApi] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [editData, setEditData] = useState<Partial<menuItemTable> | null>(null);
   useEffect(() => {
-    // fetchFoodMenu();
+    fetchFoodMenu();
+    fetchMenuCategory();
+    fetchTierList();
   }, []);
 
   async function fetchFoodMenu() {
@@ -32,28 +39,50 @@ const FoodMenu = () => {
     setFoodMenu(res);
     setIsLoading(false);
   }
+  const fetchMenuCategory = async () => {
+    const res = await settingAction.getTableList("menu_category");
+    setMenuCategoryData(res);
+  };
+  const fetchTierList = async () => {
+    const res = await settingAction.getTableList("tier_list");
+    setTierListData(res);
+  };
   const tableBody = useMemo(() => {
     return (
       foodMenu !== null &&
       foodMenu.map((item: menuItemTable, id: number) => {
         return [
           item.name,
-          item.image,
-          item.category_id,
-          item.tier_list_id,
+          <Image src={item.image} alt={item.name} width={80} height={80} quality={50} style={{justifySelf:'center'}}/>,
+          item.menu_category.name,
+          item.tier_list.name,
           item.available_amt,
           <TableFunc key={id} item={item} />,
         ];
       })
     );
   }, [foodMenu]);
-
+  useTableEventDelegation(".menu-table", foodMenu, {
+    onDelete: async (id) => {
+      const res = await menuTableAction.deleteMenuRow(id);
+      if (res?.message === "success")
+        setFoodMenu((prev) => prev?.filter((item) => item.id !== id));
+    },
+    onEdit: (data) => {
+      const obj = [{
+        inputid: data.name,
+        name: "Time Limit",
+        value: data.value,
+      }]
+      // editTable('other_info',obj)
+    },
+  });
 
   return (
     <div>
-       <div className="text-right mb-4">
+       <div className="text-right mb-4 mt-2">
           <ButtonCom
-            text="Add Table"
+            text="Add Menu"
             variant="contained"
             icon={<Add />}
             onClick={() => [setEditData(null), setIsShowModal(true)]}
@@ -62,13 +91,15 @@ const FoodMenu = () => {
       <BasicTable
         data={tableBody}
         header={tableHeader}
-        className="restaurant-table"
+        className="menu-table"
         isLoading={isLoading}
       />
       <MenuTableModel
         open={isShowModal}
         setOpen={setIsShowModal}
         callApi={setIsCallApi}
+        tierListData={tierListData}
+        menuCategoryData={menuCategoryData}
         // editData={null}
       />
     </div>

@@ -22,8 +22,8 @@ export interface menuCategoryTable {
 export interface menuItemTable {
     id: number;
     name: string;
-    tier_list_id: number;
-    category_id: number;
+    tier_list: tierListTable;
+    menu_category: menuCategoryTable;
     image: string;
     available_amt: number;
     created_at: string;

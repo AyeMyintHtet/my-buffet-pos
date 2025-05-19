@@ -25,7 +25,6 @@ type ISettingTableModel = {
 const Form = ({ renderField }: { renderField: ModalFormData }) => {
   const isEdit = !!renderField.EditId;
   const { pending } = useFormStatus();
-  console.log('renderField',renderField)
   return (
     <>
       {isEdit && <input type="hidden" name="id" value={renderField.EditId} />}

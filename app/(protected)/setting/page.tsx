@@ -36,14 +36,13 @@ const Setting = () => {
   }, []);
   useTableEventDelegation(".tier-list", tierListData, {
     onDelete: async (id) => {
-      const res = await settingAction.deleteTable("tier_list", id);
+      const res = await settingAction.deleteRow("tier_list", id);
       if (res?.message === "success")
         setTierListData((prev) => prev?.filter((item) => item.id !== id));
     },
     onEdit: (data) => {
       // setEditData(data);
       // setIsShowModal(true);
-      console.log('data',data)
       const obj = [{
         inputid: "name",
         name: "Name",
@@ -67,7 +66,7 @@ const Setting = () => {
 
   useTableEventDelegation(".menu-category-list", menuCategoryData, {
     onDelete: async (id) => {
-      const res = await settingAction.deleteTable("menu_category", id);
+      const res = await settingAction.deleteRow("menu_category", id);
       if (res?.message === "success")
         setMenuCategoryData((prev) => prev?.filter((item) => item.id !== id));
     },
@@ -77,14 +76,13 @@ const Setting = () => {
         name: "Name",
         value: data.name,
       }]
-      console.log('data',data)
       editTable('menu_category',obj, data.id,fetchMenuCategory)
     },
   });
 
   useTableEventDelegation(".time-limit-list", timeLimitData, {
     onDelete: async (id) => {
-      const res = await settingAction.deleteTable("other_info", id);
+      const res = await settingAction.deleteRow("other_info", id);
       if (res?.message === "success")
         setTimeLimitData((prev) => prev?.filter((item) => item.id !== id));
     },
@@ -222,7 +220,6 @@ const Setting = () => {
   };
 
   function editTable(tableName: IDatabases , data: Array<any>, EditId: number, callTable: () => void) {
-    console.log('data',data)
     setModalData({
       EditId,
       table: tableName,

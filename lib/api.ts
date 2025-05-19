@@ -6,12 +6,13 @@ export async function fetchApi(
 ): Promise<any> {
   const url = `${baseUrl}${endpoint}`;
   try {
+    
     const response = await fetch(url, {
       cache: "no-store",
       credentials: "include",
       ...options,
       headers: {
-        'Content-Type': 'application/json',
+      ...(endpoint.startsWith('/api/image') && options?.method === 'POST' ? {} :{'Content-Type': 'application/json' }) , 
         ...options?.headers,
       },
     });

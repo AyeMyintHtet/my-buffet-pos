@@ -1,11 +1,18 @@
 'use client';
 
-import React, { useActionState, useEffect } from 'react';
+import React, { useActionState, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { submitForm } from '@/actions/loginAction'; // Import the Server Action
+import { submitForm } from '@/actions/loginAction'; // Ensure this is typed
 import { useRouter } from 'next/navigation';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
-const Form = () => {
+// Define the expected shape of the state returned by submitForm
+type FormState = {
+  status?: 'success' | 'error';
+  error?: string;
+} | null;
+
+const Form: React.FC = () => {
   const { pending } = useFormStatus();
 
   return (
@@ -47,20 +54,39 @@ const Form = () => {
   );
 };
 
-// LoginForm component
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
   const [state, formAction] = useActionState(submitForm, null);
-  const router = useRouter()
-  useEffect(()=>{
-    if(state?.status === 'success'){
-      window.location.reload()
+  const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+  const captcha = useRef<HCaptcha>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state?.status === 'success') {
+      captcha.current?.resetCaptcha();
+      window.location.reload(); // or router.refresh() in Next.js 13+
     }
-  },[state,router])
+  }, [state, router]);
+
   return (
-    <form action={formAction} className="max-w-md mx-auto mt-10">
-      <Form />
-      {state?.error && <p className="text-red-500 text-sm mt-2">{state.error}</p>}
-    </form>
+    <>
+      <form action={formAction} className="max-w-md mx-auto mt-10">
+        <Form />
+       {process.env.NODE_ENV === 'production' && <input type="hidden" name="captchaToken" value={captchaToken ?? ''} />}
+        {state?.error && <p className="text-red-500 text-sm mt-2">{state.error}</p>}
+      </form>
+      {
+        process.env.NODE_ENV === 'production' && (
+
+          <HCaptcha
+            ref={captcha}
+            sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY!}
+            onVerify={(token: string) => {
+              setCaptchaToken(token);
+            }}
+            />
+        )
+      }
+    </>
   );
 };
 
