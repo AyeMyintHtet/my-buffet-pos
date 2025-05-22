@@ -12,7 +12,9 @@ export interface customerTable {
     table_id: number;
     tier_id: number;
     customer_count: number;
-    
+    paid: boolean;
+    tier_list: tierListTable;
+    buffet_table: buffetTable;
 }
 export interface menuCategoryTable {
     id: number;

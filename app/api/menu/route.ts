@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-export async function UPDATE(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
   try {
     const supabase = await createClient();
     const data = await req.json(); // receive the entire payload
@@ -80,7 +80,7 @@ export async function UPDATE(req: NextRequest) {
     // Remove the ID from the update payload
     const updateData = { ...data };
     delete updateData.id;
-
+    console.log(updateData, "updateData");
     // Update only provided fields
     const { data: updated, error } = await supabase
       .from("menu_item")

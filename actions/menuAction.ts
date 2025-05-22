@@ -41,11 +41,14 @@ const menuTableAction = {
   async editMenuTable(prevState: any, formData: FormData) {
     try {
       const data:any = Object.fromEntries(formData.entries());
+      console.log(data,'data');
       console.log(data.image,'data');
       if(data?.image?.name.length>0){
         const compressedImg = await handleImageChange(data?.image)
+        const sanitizedFilename = compressedImg?.name
+  ?.replace(/[^\w.-]/g, '_');
         const formDataToSend = new FormData()
-        formDataToSend.append('name', `${Date.now()}${compressedImg?.name}`)
+        formDataToSend.append('name', `${Date.now()}${sanitizedFilename}`)
         formDataToSend.append('file', compressedImg as Blob)
         const ImageUpload = await fetchApi(`/api/image`, {
           method: "POST",
@@ -54,11 +57,13 @@ const menuTableAction = {
         const {publicUrl} = await ImageUpload.json();
         if(!publicUrl) return {error:'no publicURl',hint:'no publicURl'};
         data.image = publicUrl;
+      } else if(data?.image?.name.length===0){
+        delete data.image
       }
       const response = await fetchApi(
         `/api/menu`,
         {
-          method: "UPDATE",
+          method: "PATCH",
           body: JSON.stringify(data),
         }
       );

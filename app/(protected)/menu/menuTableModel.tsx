@@ -77,11 +77,6 @@ const MenuTableModel = ({
             required
             autoComplete="off"
           />
-          {defaultValues.image && (
-            <div>
-              <img src={defaultValues.image} alt="Preview" />
-            </div>
-          )}
         </div>
 
         <div className="mb-4">
