@@ -1,5 +1,6 @@
 "use client";
 import dayjs from 'dayjs';
+import { Add } from "@mui/icons-material";
 import dashboardAction from "@/actions/dashboardAction";
 import BasicTable from "@/components/Table";
 import TableFunc from "@/components/TableFunc";
@@ -8,6 +9,10 @@ import { getUser } from "@/utils/getUser";
 import React, { useEffect, useMemo, useState } from "react";
 import settingAction from '@/actions/settingAction';
 import { Button } from '@mui/material';
+import ButtonCom from '@/components/Button';
+import SearchAutoComplete from '@/components/SearchAutoComplete';
+import buffetTableAction from '@/actions/tableAction';
+import BuffetReceipt, { ReceiptData } from '@/components/BuffetReceipt';
 
 const tableHeader = [
   "Table No",
@@ -16,21 +21,23 @@ const tableHeader = [
   "Start Time",
   "End Time",
   "Status",
-  "",
-  "",
+  "Settings",
 ];
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [buffetTable, setBuffetTable] = useState<customerTable[] | null>(null);
+  const [rawBuffetTable, setRawBuffetTable] = useState<customerTable[] | null>(null);
   const [timeLimit,setTimeLimit] = useState<[Number,Number]>([0,0]);
-
-
-  const fetchBuffetTable = async () => {
+  const [getTableId, setGetTableId] = useState<string | null>(null);
+  const [tableNumberList, setTableNumberList] = useState<string[]>([]);
+  const [buffetReceiptData, setBuffetReceiptData] = useState<ReceiptData>({})
+  const fetchCustomerTable = async () => {
     setIsLoading(true);
     const res = await dashboardAction.getMenuTableInfo()
     if (res) {
       setBuffetTable(res);
+      setRawBuffetTable(res);
     }
     setIsLoading(false);
   };
@@ -41,9 +48,25 @@ export default function Dashboard() {
     const time = timeSetting?.value.split(":");
     setTimeLimit([time[0], time[1]]);
   }
+  const fetchBuffetTable = async () => {
+    const res = await buffetTableAction.getBuffetTableInfo();
+    const obj = res.map((item:buffetTable)=> item.table_no.toString());
+    setTableNumberList(obj);
+  }
   useEffect(() => {
+    if(getTableId){
+      const res: customerTable[] = buffetTable?.filter((item:customerTable) => item.buffet_table.table_no.toString() === getTableId && item.paid === false) || [];
+      setBuffetTable(res);
+    }else{
+      setBuffetTable(rawBuffetTable);
+    }
+
+  },[getTableId]);
+  console.log(getTableId);
+  useEffect(() => {
+    fetchCustomerTable();
+    fetchTimeSetting();
     fetchBuffetTable();
-    fetchTimeSetting()
   }, []);
 
 
@@ -69,11 +92,21 @@ export default function Dashboard() {
   return (
     <div>
       Dashboard
+      {/* <BuffetReceipt data={}/> */}
+      <div className="text-right mb-4 mt-2">
+          <ButtonCom
+            text="New Customer"
+            variant="contained"
+            icon={<Add />}
+            onClick={() => []}
+          />
+          <SearchAutoComplete data={tableNumberList} setValue={setGetTableId} label='Search Table Number'/>
+        </div>
       <br />
       <BasicTable
         data={tableBody}
         header={tableHeader}
-        className="menu-table"
+        className="dashboard-menu-table"
         isLoading={isLoading}
       />
     </div>
