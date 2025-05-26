@@ -83,7 +83,7 @@ export default function Dashboard() {
           calculatedDate.add(Number(timeLimit[0]), 'hour').add(Number(timeLimit[1]), 'minute').format("HH:mm:ss"),,
           item.paid ? "Paid" : "Pending",
           <TableFunc key={id} item={item} />,
-          <Button variant="contained">Print</Button>
+          <Button variant="contained" onClick={()=>[]}>Print</Button>
         ];
       })
     );
