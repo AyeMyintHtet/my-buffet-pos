@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Box, Typography, Divider, Grid, Button } from '@mui/material';
 import { useReactToPrint } from 'react-to-print';
 
@@ -14,19 +14,24 @@ type BuffetReceiptProps = {
     data:ReceiptData
     
 }
-
+export type BuffetReceiptHandle = {
+  handlePrint: () => void;
+};
 const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps>(
   ({data}, ref) => {
-    const now = 'new Date().toLocaleString()';
 
     return (
         <Box
         ref={ref}
         sx={{
+          position: 'absolute',
+          left: '-9999px',
           p: 2,
           width: '80mm', // or a fixed px like '300px'
           fontFamily: 'monospace',
           '@media print': {
+            position: 'static', 
+            left: 0,
             width: '80mm',
             boxShadow: 'none',
             margin: 0,
@@ -39,7 +44,7 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
           Buffet POS
         </Typography>
         <Typography variant="body2" align="center" gutterBottom>
-          {now}
+          {data.time}
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
@@ -66,7 +71,7 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
           </Grid>
           <Grid container spacing={2}>
           <Grid item xs={6}><Typography variant="body2">Total:</Typography></Grid>
-          <Grid item xs={6}><Typography variant="body2">{data.cost}</Typography></Grid>
+          <Grid item xs={6}><Typography variant="body2">{ (Number(data.cost) * 1.08).toString()}</Typography></Grid>
           </Grid>
         <Divider sx={{ mt: 2 }} />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -79,10 +84,12 @@ const BuffetReceiptContent = React.forwardRef<HTMLDivElement, BuffetReceiptProps
 BuffetReceiptContent.displayName = 'BuffetReceiptContent';
 
 
-const BuffetReceipt = ({data}:{data:ReceiptData}) => {
+const BuffetReceipt = forwardRef<BuffetReceiptHandle, BuffetReceiptProps>(({data}:{data:ReceiptData},ref) => {
     const contentRef = useRef<HTMLDivElement>(null);
+    const triggerPrint = useReactToPrint({contentRef});
 
     const handlePrint = () => {
+      console.log('Print asdfdsaf');
         if (contentRef.current) {
           triggerPrint(); // wrapped with useReactToPrint
         } else {
@@ -91,16 +98,12 @@ const BuffetReceipt = ({data}:{data:ReceiptData}) => {
           }, 100); // small delay
         }
       };
-      
-      const triggerPrint = useReactToPrint({contentRef});
+      useImperativeHandle(ref, () => ({
+        handlePrint,
+      }));
   return (
-    <>
       <BuffetReceiptContent ref={contentRef} data={data} />
-      <Button variant="contained" onClick={handlePrint} sx={{ mt: 2 }}>
-        Print Receipt
-      </Button>
-    </>
   );
-};
+});
 
 export default BuffetReceipt;
