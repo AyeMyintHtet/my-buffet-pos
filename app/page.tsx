@@ -192,11 +192,23 @@ export default function Dashboard() {
       setIsShowModal(true);
     },
   });
+  const archivePrintedReceipts = async () => {
+
+    setGetTableId(null);
+    rawBuffetTable && setBuffetTable(rawBuffetTable?.filter((item: customerTable)=> item.paid === false))
+    
+  }
   return (
     <>
       Dashboard
       <BuffetReceipt ref={receiptRef} data={buffetReceiptData} />
+
       <div className="text-right mb-4 mt-2 flex justify-end items-center gap-3">
+      <ButtonCom
+          text="Archive Printed Receipts"
+          variant="contained"
+          onClick={() => archivePrintedReceipts()}
+        />
         <SearchAutoComplete
           data={tableNumberList}
           setValue={setGetTableId}
