@@ -3,6 +3,6 @@ export default {
       optimizePackageImports: ["@chakra-ui/react"],
     },
     images:{
-      domains: ["wzoxtplnznkjdpgcqrlu.supabase.co"],
+      domains: ["wzoxtplnznkjdpgcqrlu.supabase.co","iydhlnnmncdkyqjwjxoe.supabase.co"],
     }
   }

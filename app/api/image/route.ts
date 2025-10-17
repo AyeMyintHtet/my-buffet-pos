@@ -11,12 +11,12 @@ export async function POST(req:NextRequest){
         if (!file || !name) {
           return NextResponse.json({ error: "Missing fields" }, { status: 400 })
         }
-        const { data, error } = await supabase.storage.from("menu.image").upload(name,file);
+        const { data, error } = await supabase.storage.from("images").upload(name,file);
         if (error) {
           return NextResponse.json({ error: error.message }, { status: 500 });
         }
         const { data: urlData } = await supabase.storage
-          .from("menu.image")
+          .from("images")
           .getPublicUrl(name);
         return NextResponse.json({ message: "success", publicUrl:urlData.publicUrl }, { status: 200 });
       } catch (err) {
