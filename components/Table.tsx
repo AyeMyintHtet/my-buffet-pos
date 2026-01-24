@@ -69,28 +69,32 @@ export default function BasicTable({
               </TableCell>
             </TableRow>
           ) : (
-            data?.map((row: any, id: number) => (
-              <TableRow
-                key={id}
-                {...{ 'data-id': row.id }}
-                className="hover:bg-slate-700/30 transition-colors duration-150 group"
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                {row.map((item: any, idx: number) => (
-                  <TableCell
-                    align="center"
-                    key={idx}
-                    sx={{
-                      color: "var(--surface-foreground)",
-                      borderBottom: "1px solid rgba(255,255,255,0.05)",
-                      py: 2.5
-                    }}
-                  >
-                    {item}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            data?.map((row: any, id: number) => {
+              const menuRow = Array.isArray(row) ? row : row.cells;
+              const rowClass = Array.isArray(row) ? "" : row.className;
+              return (
+                <TableRow
+                  key={id}
+                  {...{ "data-id": row.id }}
+                  className={`hover:bg-slate-700/30 transition-colors duration-150 group ${rowClass}`}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  {menuRow?.map((item: any, idx: number) => (
+                    <TableCell
+                      align="center"
+                      key={idx}
+                      sx={{
+                        color: "var(--surface-foreground)",
+                        borderBottom: "1px solid rgba(255,255,255,0.05)",
+                        py: 2.5,
+                      }}
+                    >
+                      {item}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })
           )}
         </TableBody>
       </Table>

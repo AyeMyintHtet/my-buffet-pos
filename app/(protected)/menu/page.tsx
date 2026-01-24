@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Add } from "@mui/icons-material";
 import menuTableAction from "@/actions/menuAction";
 import BasicTable from "@/components/Table";
@@ -10,6 +10,7 @@ import ButtonCom from "@/components/Button";
 import settingAction from "@/actions/settingAction";
 import Image from "next/image";
 import useTableEventDelegation from "@/hooks/useTableEventDelegation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const tableHeader = [
   "Name",
@@ -20,42 +21,40 @@ const tableHeader = [
   "",
 ];
 const FoodMenu = () => {
-  const [foodMenu, setFoodMenu] = useState<menuItemTable[]>([]);
-  const [tierListData, setTierListData] = useState<tierListTable[]>([]);
-  const [menuCategoryData, setMenuCategoryData] = useState<menuCategoryTable[]>([]);
+  const queryClient = useQueryClient();
   const [isShowModal, setIsShowModal] = useState(false);
-  const [isCallApi, setIsCallApi] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [editData, setEditData] = useState<Partial<menuItemTable> | null>(null);
-  useEffect(() => {
-    fetchMenuCategory();
-    fetchTierList();
-  }, []);
-  useEffect(() => {
-    fetchFoodMenu();
-  }, [isCallApi]);
 
-  async function fetchFoodMenu() {
-    setIsLoading(true);
-    const res = await menuTableAction.getMenuTableInfo();
-    setFoodMenu(res);
-    setIsLoading(false);
-  }
-  const fetchMenuCategory = async () => {
-    const res = await settingAction.getTableList("menu_category");
-    setMenuCategoryData(res);
+  // --- Queries ---
+  const { data: foodMenu, isLoading: isMenuLoading } = useQuery({
+    queryKey: ["menu_item"],
+    queryFn: () => menuTableAction.getMenuTableInfo(),
+    staleTime: Infinity,
+  });
+
+  const { data: tierListData } = useQuery({
+    queryKey: ["tier_list"],
+    queryFn: () => settingAction.getTableList("tier_list"),
+    staleTime: Infinity,
+  });
+
+  const { data: menuCategoryData } = useQuery({
+    queryKey: ["menu_category"],
+    queryFn: () => settingAction.getTableList("menu_category"),
+    staleTime: Infinity,
+  });
+
+  // --- Invalidation ---
+  const invalidateMenu = () => {
+    queryClient.invalidateQueries({ queryKey: ["menu_item"] });
   };
-  const fetchTierList = async () => {
-    const res = await settingAction.getTableList("tier_list");
-    setTierListData(res);
-  };
+
   const tableBody = useMemo(() => {
     return (
-      foodMenu !== null &&
-      foodMenu.map((item: menuItemTable, id: number) => {
+      foodMenu?.map((item: menuItemTable, id: number) => {
         return [
           item.name,
-          <Image src={item.image} alt={item.name} width={80} height={80} quality={50} style={{justifySelf:'center'}}/>,
+          <Image key={id} src={item.image} alt={item.name} width={80} height={80} quality={50} style={{ justifySelf: 'center' }} />,
           item.menu_category.name,
           item.tier_list.name,
           item.available_amt,
@@ -64,46 +63,45 @@ const FoodMenu = () => {
       })
     );
   }, [foodMenu]);
+
   useTableEventDelegation(".menu-table", foodMenu, {
     onDelete: async (id) => {
       const res = await menuTableAction.deleteMenuRow(id);
-      if (res?.message === "success")
-        setFoodMenu((prev) => prev?.filter((item) => item.id !== id));
+      if (res?.message === "success") invalidateMenu();
     },
     onEdit: (data) => {
-      console.log(data,'dataa');
+      console.log(data, 'dataa');
       setEditData({
         ...data,
-        table_no : data.name,
+        table_no: data.name,
         max_customer: data.available_amt
       })
       setIsShowModal(true)
-      // editTable('other_info',obj)
     },
   });
 
   return (
     <div>
-       <div className="text-right mb-4 mt-2">
-          <ButtonCom
-            text="Add Menu"
-            variant="contained"
-            icon={<Add />}
-            onClick={() => [setEditData(null), setIsShowModal(true)]}
-          />
-        </div>
+      <div className="text-right mb-4 mt-2">
+        <ButtonCom
+          text="Add Menu"
+          variant="contained"
+          icon={<Add />}
+          onClick={() => [setEditData(null), setIsShowModal(true)]}
+        />
+      </div>
       <BasicTable
         data={tableBody}
         header={tableHeader}
         className="menu-table"
-        isLoading={isLoading}
+        isLoading={isMenuLoading}
       />
       <MenuTableModel
         open={isShowModal}
         setOpen={setIsShowModal}
-        callApi={setIsCallApi}
-        tierListData={tierListData}
-        menuCategoryData={menuCategoryData}
+        callApi={invalidateMenu}
+        tierListData={tierListData || []}
+        menuCategoryData={menuCategoryData || []}
         editData={editData}
       />
     </div>

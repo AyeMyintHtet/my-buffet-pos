@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import BasicTable from "@/components/Table";
 import buffetTableAction from "@/actions/tableAction";
 import { buffetTable } from "@/types/supabase_db.types";
@@ -9,6 +9,7 @@ import ButtonCom from "@/components/Button";
 import RestaurantTableModal from "./restaurantTableModal";
 import { useRouter } from "next/navigation";
 import useTableEventDelegation from "@/hooks/useTableEventDelegation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const buffetTableHeader = [
   "Table Number",
@@ -18,21 +19,26 @@ const buffetTableHeader = [
 ];
 
 export default function Dashboard() {
-  const [buffetTable, setBuffetTable] = useState<buffetTable[] | null>(null);
+  const queryClient = useQueryClient();
   const [isShowModal, setIsShowModal] = useState(false);
-  const [isCallApi, setIsCallApi] = useState(false);
   const [editData, setEditData] = useState<Partial<buffetTable> | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
-  useEffect(() => {
-    callApi();
-  }, [isCallApi]);
+  // --- Queries ---
+  const { data: buffetTable, isLoading } = useQuery({
+    queryKey: ["buffet_table"],
+    queryFn: () => buffetTableAction.getBuffetTableInfo(),
+    staleTime: Infinity,
+  });
+
+  // --- Invalidation ---
+  const invalidateTable = () => {
+    queryClient.invalidateQueries({ queryKey: ["buffet_table"] });
+  };
 
   useTableEventDelegation(".restaurant-table", buffetTable, {
     onDelete: async (id) => {
       const res = await buffetTableAction.deleteBuffetTable(id);
-      if (res?.message === "success") setBuffetTable((prev) => prev?.filter((item) => item.id !== id) || null);
+      if (res?.message === "success") invalidateTable();
     },
     onEdit: (data) => {
       setEditData({
@@ -43,13 +49,6 @@ export default function Dashboard() {
       setIsShowModal(true);
     },
   });
-
-  async function callApi() {
-    setIsLoading(true);
-    const res = await buffetTableAction.getBuffetTableInfo();
-    setBuffetTable(res);
-    setIsLoading(false);
-  }
 
   const tableBody = useMemo(() => {
     if (!buffetTable) return null;
@@ -97,7 +96,7 @@ export default function Dashboard() {
       <RestaurantTableModal
         open={isShowModal}
         setOpen={setIsShowModal}
-        callApi={setIsCallApi}
+        callApi={invalidateTable}
         editData={editData}
       />
     </div>

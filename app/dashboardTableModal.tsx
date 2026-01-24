@@ -58,7 +58,7 @@ const DashboardTableModel = ({
             id="table_id"
             name="table_id"
             defaultValue={defaultValues.table_id}
-            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
           >
             <option value="-" disabled>
@@ -85,9 +85,13 @@ const DashboardTableModel = ({
             id="customer_count"
             name="customer_count"
             defaultValue={defaultValues.customer_count}
-            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+            onChange={(e) => {
+              e.target.value = e.target.value.replace(/[^0-9]/g, "");
+            }}
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
             autoComplete="off"
+            min={1}
           />
         </div>
 
@@ -102,7 +106,7 @@ const DashboardTableModel = ({
             id="tier_id"
             name="tier_id"
             defaultValue={defaultValues.tier_id}
-            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
           >
             <option value="" disabled>

@@ -1,8 +1,21 @@
 export default {
-    experimental: {
-      optimizePackageImports: ["@chakra-ui/react"],
-    },
-    images:{
-      domains: ["wzoxtplnznkjdpgcqrlu.supabase.co","iydhlnnmncdkyqjwjxoe.supabase.co"],
-    }
+  experimental: {
+    optimizePackageImports: ["@chakra-ui/react"],
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'wzoxtplnznkjdpgcqrlu.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'iydhlnnmncdkyqjwjxoe.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   }
+}

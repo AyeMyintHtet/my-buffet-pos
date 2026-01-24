@@ -64,7 +64,7 @@ const MenuTableModel = ({
         <div className="mb-4">
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             Name
           </label>
@@ -73,7 +73,7 @@ const MenuTableModel = ({
             id="name"
             name="name"
             defaultValue={defaultValues.table_no}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
             autoComplete="off"
           />
@@ -82,7 +82,7 @@ const MenuTableModel = ({
         <div className="mb-4">
           <label
             htmlFor="image"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             Image
           </label>
@@ -91,21 +91,20 @@ const MenuTableModel = ({
             id="image"
             name="image"
             accept="image/*"
-            className="mt-1 block w-full text-sm text-gray-700
+            className="mt-1 block w-full text-sm text-slate-300
       file:mr-4 file:py-2 file:px-4
       file:rounded-md file:border-0
       file:text-sm file:font-semibold
-      file:bg-blue-50 file:text-gray-700
-      hover:file:bg-blue-100
-    "
+      file:bg-primary file:text-primary-foreground
+      hover:file:bg-amber-600"
             required={!isEdit}
-            // onChange={(e)=> ImageUpload(e)}
+          // onChange={(e)=> ImageUpload(e)}
           />
         </div>
         <div className="mb-4">
           <label
             htmlFor="available_amt"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             Available Amount
           </label>
@@ -114,7 +113,7 @@ const MenuTableModel = ({
             id="available_amt"
             name="available_amt"
             defaultValue={defaultValues.max_customer}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
             autoComplete="off"
           />
@@ -122,7 +121,7 @@ const MenuTableModel = ({
         <div className="mb-4">
           <label
             htmlFor="category_id"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             Category
           </label>
@@ -130,7 +129,7 @@ const MenuTableModel = ({
             id="category_id"
             name="category_id"
             defaultValue={defaultValues.category_id}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
           >
             <option value="" disabled>
@@ -147,7 +146,7 @@ const MenuTableModel = ({
         <div className="mb-4">
           <label
             htmlFor="tier_list_id"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-slate-300"
           >
             Tier List
           </label>
@@ -155,7 +154,7 @@ const MenuTableModel = ({
             id="tier_list_id"
             name="tier_list_id"
             defaultValue={defaultValues.tier_list_id}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
           >
             <option value="" disabled>
@@ -170,7 +169,7 @@ const MenuTableModel = ({
         </div>
         <button
           type="submit"
-          className="w-full cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full cursor-pointer px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 font-bold"
           disabled={pending}
         >
           {pending ? "Submitting..." : isEdit ? "Update" : "Add"}

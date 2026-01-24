@@ -31,7 +31,7 @@ const RestaurantTableModal = ({ open, setOpen, callApi, editData }: IRestaurantT
             id="table-number"
             name="table_no"
             defaultValue={defaultValues.table_no}
-            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
             autoComplete="off"
           />
@@ -46,7 +46,7 @@ const RestaurantTableModal = ({ open, setOpen, callApi, editData }: IRestaurantT
             id="max-customer"
             name="max_customer"
             defaultValue={defaultValues.max_customer}
-            className="mt-1 block w-full px-3 py-2 bg-black/50 border border-slate-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+            className="mt-1 block w-full px-3 py-2 bg-secondary border border-slate-600 rounded-md text-primary shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
             required
             autoComplete="off"
           />
