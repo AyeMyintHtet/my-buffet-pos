@@ -141,7 +141,7 @@ export default function Dashboard() {
     if (createQrData && tierListData) {
       const { tier_id, created_at, table_id, customer_count } = createQrData;
       const calculatedDate = dayjs(created_at);
-      const tier = tierListData.find((item) => item.id === tier_id);
+      const tier = tierListData.find((item: tierListTable) => item.id === tier_id);
       const encrypted = encrypt(`${tier_id + ',' + created_at.toString() + ',' + table_id + ',' + customer_count}`);
       console.log("Encrypted Data:", encrypted);
       setBuffetReceiptData({
