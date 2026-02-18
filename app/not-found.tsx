@@ -1,4 +1,6 @@
 
+import Link from 'next/link';
+
 export default function NotFound() {
   const styles :any = {
     container: {
@@ -53,9 +55,9 @@ export default function NotFound() {
       <style>{styles.keyframes}</style>
       <h1 style={styles.title}>404</h1>
       <p style={styles.message}>Oops! Page not found.</p>
-      <a href="/" style={styles.button}>
+      <Link href="/" style={styles.button}>
         Go back home
-      </a>
+      </Link>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 export default {
   experimental: {
-    optimizePackageImports: ["@chakra-ui/react"],
+    optimizePackageImports: ["@mui/material", "@mui/icons-material"],
   },
   images: {
     remotePatterns: [

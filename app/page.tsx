@@ -11,7 +11,7 @@ import {
   otherInfoTable,
 } from "@/types/supabase_db.types";
 import { getUser } from "@/utils/getUser";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import settingAction from "@/actions/settingAction";
 import { Button } from "@mui/material";
 import ButtonCom from "@/components/Button";
@@ -129,38 +129,41 @@ export default function Dashboard() {
 
 
   // --- Invalidation ---
-  const invalidateDashboard = () => {
+  const invalidateDashboard = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["dashboard_table"] });
     // Also invalidate table usage status if we care about "Available/Used"
     queryClient.invalidateQueries({ queryKey: ["buffet_table"] });
-  };
+  }, [queryClient]);
 
 
   // --- Effects for QR/Receipt ---
   useEffect(() => {
-    if (createQrData && tierListData) {
-      const { tier_id, created_at, table_id, customer_count } = createQrData;
-      const calculatedDate = dayjs(created_at);
-      const tier = tierListData.find((item: tierListTable) => item.id === tier_id);
-      const encrypted = encrypt(`${tier_id + ',' + created_at.toString() + ',' + table_id + ',' + customer_count}`);
-      console.log("Encrypted Data:", encrypted);
-      console.log("QR Code:", `${window.location.origin}/customer/${encrypted}`);
-      // console.log('decrypted', decrypt(encrypted));
-      setBuffetReceiptData({
-        menuTier: tier?.name,
-        startTime: calculatedDate.format("HH:mm:ss"),
-        endTime: calculatedDate
-          .add(Number(timeLimit[0]), "hour")
-          .add(Number(timeLimit[1]), "minute")
-          .format("HH:mm:ss"),
-        customerCount: customer_count.toString(),
-        time: new Date().toLocaleString(),
-        qrCode: `${window.location.origin}/customer/${encrypted}`
-      });
-      setTimeout(() => {
-        receiptRef.current?.handlePrint();
-      }, 100);
-    }
+    const generateReceipt = async () => {
+      if (createQrData && tierListData) {
+        const { tier_id, created_at, table_id, customer_count } = createQrData;
+        const calculatedDate = dayjs(created_at);
+        const tier = tierListData.find((item: tierListTable) => item.id === tier_id);
+        const encrypted = await encrypt(`${tier_id + ',' + created_at.toString() + ',' + table_id + ',' + customer_count}`);
+        console.log("Encrypted Data:", encrypted);
+        console.log("QR Code:", `${window.location.origin}/customer/${encrypted}`);
+        // console.log('decrypted', await decrypt(encrypted));
+        setBuffetReceiptData({
+          menuTier: tier?.name,
+          startTime: calculatedDate.format("HH:mm:ss"),
+          endTime: calculatedDate
+            .add(Number(timeLimit[0]), "hour")
+            .add(Number(timeLimit[1]), "minute")
+            .format("HH:mm:ss"),
+          customerCount: customer_count.toString(),
+          time: new Date().toLocaleString(),
+          qrCode: `${window.location.origin}/customer/${encrypted}`
+        });
+        setTimeout(() => {
+          receiptRef.current?.handlePrint();
+        }, 100);
+      }
+    };
+    generateReceipt();
   }, [createQrData, tierListData, timeLimit]);
 
   // Click handler delegation
@@ -206,7 +209,7 @@ export default function Dashboard() {
     return () => {
       window.removeEventListener("click", () => { });
     };
-  }, [rawBuffetTable, timeLimit]); // Depend on raw data
+  }, [rawBuffetTable, timeLimit, invalidateDashboard]); // Depend on raw data
 
 
   const tableBody = useMemo(() => {
