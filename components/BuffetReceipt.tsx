@@ -138,4 +138,6 @@ const BuffetReceipt = forwardRef<BuffetReceiptHandle, BuffetReceiptProps>(({ dat
   );
 });
 
+BuffetReceipt.displayName = 'BuffetReceipt';
+
 export default BuffetReceipt;
